@@ -1,0 +1,32 @@
+# Dependencies
+/node_modules
+/jspm_packages
+
+# Lock files
+package-lock.json
+npm-shrinkwrap.json
+yarn.lock
+
+# Testing/Coverage
+/coverage
+/.nyc_output
+
+# Logs and temporary files
+*.log
+*.gz
+*.orig
+/logs
+/tmp
+
+# Environment variables
+.env
+.env.local
+
+# Build artifacts
+/dist
+/build
+
+# Editor/OS specific files (optional, can be added via global gitignore)
+.DS_Store # macOS
+Thumbs.db # Windows
+.vscode/ # VS Code settings, use with caution if sharing specific settings is desired
