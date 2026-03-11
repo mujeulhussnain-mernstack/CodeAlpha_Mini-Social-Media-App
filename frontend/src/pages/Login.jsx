@@ -1,22 +1,49 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import Loader from "../components/Loader";
+import { toast } from "react-toastify";
+import { API_END_POINT } from "../constants/index";
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "../store/user.slice";
 const Login = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [_, setIsHovered] = useState(false);
   const [inputData, setInputData] = useState({
     email: "",
     password: "",
   });
-  
+
   const inputDataHandler = async (e) => {
     e.preventDefault();
     try {
-      console.log(inputData);
+      setLoading(true);
+      const response = await axios.post(
+        `${API_END_POINT}/user/login`,
+        inputData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        },
+      );
+      if (response.data.success) {
+        toast.success(response.data.message || "Try Again", { autoClose: 500 });
+        dispatch(setAuthUser(response.data.user));
+        navigate("/");
+      }
     } catch (error) {
-      console.log(error);
+      const message =
+        error.response?.data?.message || error.message || "Login failed";
+      toast.error(message, { autoClose: 500 });
+    } finally {
+      setLoading(false);
     }
   };
-  
+
   return (
     <div className="h-screen w-full flex justify-center items-center bg-[#0a0a12] relative overflow-y-auto py-8">
       {/* Animated background elements - adjusted for mobile */}
@@ -41,14 +68,18 @@ const Login = () => {
             Nexus
           </h1>
           <p className="text-gray-400 text-base sm:text-lg max-w-md mx-auto lg:mx-0 px-4 sm:px-0">
-            Welcome back! Log in to connect with friends and the world around you.
+            Welcome back! Log in to connect with friends and the world around
+            you.
           </p>
 
           {/* Feature list - centered on mobile, left on desktop */}
           <div className="flex flex-col gap-3 lg:gap-4 max-w-sm mx-auto lg:mx-0 px-4 sm:px-0">
             {["Share your posts", "Like, Share, Comment", "Privacy first"].map(
               (feature, i) => (
-                <div key={i} className="flex items-center gap-3 text-gray-300 justify-center lg:justify-start">
+                <div
+                  key={i}
+                  className="flex items-center gap-3 text-gray-300 justify-center lg:justify-start"
+                >
                   <div className="w-2 h-2 bg-purple-500 rounded-full flex-shrink-0"></div>
                   <span className="text-sm sm:text-base">{feature}</span>
                 </div>
@@ -59,7 +90,10 @@ const Login = () => {
 
         {/* Right side - Login form - full width on mobile, centered on desktop */}
         <div className="flex-1 w-full max-w-md px-2 sm:px-0 mx-auto">
-          <form className="bg-[#1a1625]/80 backdrop-blur-xl p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-purple-500/20 shadow-2xl space-y-5 sm:space-y-6" onSubmit={inputDataHandler}>
+          <form
+            className="bg-[#1a1625]/80 backdrop-blur-xl p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-purple-500/20 shadow-2xl space-y-5 sm:space-y-6"
+            onSubmit={inputDataHandler}
+          >
             {/* Logo mark - small */}
             <div className="flex justify-center mb-4 sm:mb-6">
               <div className="w-14 h-14 sm:w-16 sm:h-16 bg-gradient-to-br from-purple-500 to-purple-700 rounded-2xl rotate-45 flex items-center justify-center">
@@ -84,7 +118,9 @@ const Login = () => {
                   placeholder="Email"
                   className="w-full pl-12 pr-4 py-3 sm:py-4 rounded-xl bg-[#0a0a12] border border-purple-500/20 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-all duration-300 text-sm sm:text-base"
                   value={inputData.email}
-                  onChange={(e) => setInputData({...inputData, email: e.target.value})}
+                  onChange={(e) =>
+                    setInputData({ ...inputData, email: e.target.value })
+                  }
                 />
               </div>
 
@@ -98,7 +134,9 @@ const Login = () => {
                   placeholder="Password"
                   className="w-full pl-12 pr-12 py-3 sm:py-4 rounded-xl bg-[#0a0a12] border border-purple-500/20 text-white placeholder-gray-500 focus:outline-none focus:border-purple-500 transition-all duration-300 text-sm sm:text-base"
                   value={inputData.password}
-                  onChange={(e) => setInputData({...inputData, password: e.target.value})}
+                  onChange={(e) =>
+                    setInputData({ ...inputData, password: e.target.value })
+                  }
                 />
               </div>
 
@@ -108,7 +146,7 @@ const Login = () => {
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
               >
-                Log In
+                {loading ? <Loader /> : "Log In"}
               </button>
             </div>
 

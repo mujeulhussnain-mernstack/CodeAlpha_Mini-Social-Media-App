@@ -5,12 +5,16 @@ const authUser = createSlice({
   },
   initialState: {
     authUser: null,
+    suggestedUsers: []
   },
   reducers: {
     setAuthUser: (state, action) => {
       state.authUser = action.payload;
     },
+    setSuggestedUsers: (state, action) => {
+      state.suggestedUsers = action.payload
+    }
   },
 });
-export const { setAuthUser } = authUser.actions;
+export const { setAuthUser, setSuggestedUsers } = authUser.actions;
 export default authUser.reducer;

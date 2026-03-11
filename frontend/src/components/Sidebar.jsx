@@ -1,16 +1,37 @@
+import axios from "axios";
 import { sideMenus } from "../constants/common";
 import { NavLink, useNavigate } from "react-router-dom";
+import { API_END_POINT } from "../constants";
+import { toast } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setAuthUser } from "../store/user.slice";
 
 const Sidebar = () => {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   // Get current user ID from your auth state/context/localStorage
   const currentUserId = "123"; // Replace this with actual logged-in user ID
 
-  const handleLogout = () => {
-    // Add your logout logic here (clear tokens, state, etc.)
-    console.log("Logging out...");
-    navigate("/login");
+  const handleLogout = async () => {
+    try {
+      const response = await axios.post(
+        `${API_END_POINT}/user/logout`,
+        {},
+        {
+          withCredentials: true,
+        },
+      );
+      if (response.data.success) {
+        toast.success(response.data.message || "Try Again", { autoClose: 500 });
+        dispatch(setAuthUser(null));
+        navigate("/login");
+      }
+    } catch (error) {
+      const message =
+        error.response?.data?.message || error.message || "Login failed";
+      toast.error(message, { autoClose: 500 });
+    }
   };
 
   return (
