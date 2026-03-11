@@ -3,7 +3,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import MainLayout from "./components/MainLayout";
 import Feed from "./pages/Feed";
-import AllUsers from "./pages/AllUsers";
+import Search from "./pages/Search";
 import SuggestedUsers from "./pages/SuggestedUsers";
 import CreatePost from "./pages/CreatePost";
 import EditProfile from "./pages/EditProfile";
@@ -19,7 +19,7 @@ const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       { path: "/", element: <Feed /> },
-      { path: "/search", element: <AllUsers /> },
+      { path: "/search", element: <Search /> },
       { path: "/create", element: <CreatePost /> },
       { path: "/suggestedusers", element: <SuggestedUsers /> },
       { path: "/editprofile", element: <EditProfile /> },
