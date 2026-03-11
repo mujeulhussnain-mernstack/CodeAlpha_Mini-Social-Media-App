@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-
+import {API_END_POINT} from "../constants/index.js"
+import { toast } from "react-toastify";
+import axios from "axios"
+import { useNavigate } from "react-router-dom";
+import Loader from "../components/Loader.jsx";
 const Register = () => {
+  const navigate = useNavigate()
   const [_, setIsHovered] = useState(false);
+  const [loading, setLoading] = useState(false)
   const [inputData, setInputData] = useState({
     username: "",
     email: "",
@@ -11,9 +17,22 @@ const Register = () => {
   const inputDataHandler = async (e) => {
     e.preventDefault();
     try {
-      console.log(inputData)
+      setLoading(true)
+      const response = await axios.post(`${API_END_POINT}/user/register`, inputData, {
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+      if (response.data.success) {
+        toast.success(response.data.message || "Try Again", {autoClose: 500})
+        navigate("/login")
+      }
     } catch (error) {
-      console.log(error)
+      const message =
+        error.response?.data?.message || error.message || "Login failed";
+      toast.error(message, {autoClose: 500})
+    }finally {
+      setLoading(false)
     }
   }
   return (
@@ -122,7 +141,7 @@ const Register = () => {
                 onMouseEnter={() => setIsHovered(true)}
                 onMouseLeave={() => setIsHovered(false)}
               >
-                Get Started
+                {loading ? <Loader/> : "Get Started"}
               </button>
             </div>
 

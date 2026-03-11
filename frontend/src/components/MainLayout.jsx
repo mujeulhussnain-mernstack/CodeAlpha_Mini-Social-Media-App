@@ -41,7 +41,7 @@ const MainLayout = () => {
       )}
       
       {/* Main content area - scrollable */}
-      <div className="flex-1 overflow-y-auto relative z-10">
+      <div className="flex-1 overflow-y-auto relative z-10 text-white">
         <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 pt-16 lg:pt-8">
           <Outlet />
         </div>
