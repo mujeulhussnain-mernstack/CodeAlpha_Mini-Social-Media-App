@@ -7,7 +7,7 @@ import cloudinary from "../utils/cloudinary.js";
 export const AddPost = async (req, res) => {
   try {
     const authorId = req.id;
-    const image = req.params.id;
+    const image = req.file;
     const { caption } = req.body;
     const user = await User.findById(authorId);
     if (!user) {
@@ -15,7 +15,7 @@ export const AddPost = async (req, res) => {
         .status(404)
         .json({ message: "User not found", success: false });
     }
-    if (!image || !image.buffer) {
+    if (!image) {
       return res
         .status(400)
         .json({ message: "Image required", success: false });
@@ -35,7 +35,7 @@ export const AddPost = async (req, res) => {
       await user.posts.push(post._id);
       await user.save();
       return res
-        .status(400)
+        .status(201)
         .json({ message: "Post added", success: true, post });
     }
   } catch (error) {

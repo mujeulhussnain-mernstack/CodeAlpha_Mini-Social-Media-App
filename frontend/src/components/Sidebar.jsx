@@ -3,15 +3,13 @@ import { sideMenus } from "../constants/common";
 import { NavLink, useNavigate } from "react-router-dom";
 import { API_END_POINT } from "../constants";
 import { toast } from "react-toastify";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { setAuthUser } from "../store/user.slice";
 
 const Sidebar = () => {
+  const authUser = useSelector(store => store.user?.authUser)
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-  // Get current user ID from your auth state/context/localStorage
-  const currentUserId = "123"; // Replace this with actual logged-in user ID
 
   const handleLogout = async () => {
     try {
@@ -50,7 +48,7 @@ const Sidebar = () => {
         <div className="text-white flex flex-col gap-1.5">
           {/* Profile Link - Separate from sideMenus */}
           <NavLink
-            to={`/profile/${currentUserId}`}
+            to={`/profile/${authUser?._id}`}
             className={({ isActive }) =>
               `flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ${
                 isActive
