@@ -27,7 +27,7 @@ const MainLayout = () => {
       {/* Sidebar - desktop always visible, mobile conditional */}
       <div className={`
         ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} 
-        lg:translate-x-0 fixed lg:relative z-40 transition-transform duration-300 ease-in-out
+        lg:translate-x-0 fixed lg:relative z-30 transition-transform duration-300 ease-in-out
       `}>
         <Sidebar />
       </div>
@@ -35,7 +35,7 @@ const MainLayout = () => {
       {/* Overlay for mobile when sidebar is open */}
       {isSidebarOpen && (
         <div 
-          className="fixed inset-0 bg-black/50 z-30 lg:hidden backdrop-blur-sm"
+          className="fixed inset-0 bg-black/50 z-10 lg:hidden backdrop-blur-sm"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}

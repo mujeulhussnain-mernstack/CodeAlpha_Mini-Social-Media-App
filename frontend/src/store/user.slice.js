@@ -5,7 +5,10 @@ const authUser = createSlice({
   },
   initialState: {
     authUser: null,
-    suggestedUsers: []
+    suggestedUsers: [],
+    feed: [],
+    commentsOfPost: [],
+    getProfile: [],
   },
   reducers: {
     setAuthUser: (state, action) => {
@@ -13,8 +16,17 @@ const authUser = createSlice({
     },
     setSuggestedUsers: (state, action) => {
       state.suggestedUsers = action.payload
+    },
+    setFeed: (state, action) => {
+      state.feed = action.payload
+    },
+    setCommentsOfPost: (state, action) => {
+      state.commentsOfPost = action.payload
+    },
+    setGetProfile: (state, action) => {
+      state.getProfile = action.payload
     }
   },
 });
-export const { setAuthUser, setSuggestedUsers } = authUser.actions;
+export const { setAuthUser, setSuggestedUsers, setFeed, setCommentsOfPost, setGetProfile } = authUser.actions;
 export default authUser.reducer;

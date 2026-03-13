@@ -1,6 +1,7 @@
 import User from "../models/user.model.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import Post from "../models/post.model.js"
 import fileUri from "../utils/datauri.js";
 import cloudinary from "../utils/cloudinary.js";
 export const Register = async (req, res) => {
@@ -211,3 +212,35 @@ export const GetSuggestedUsers = async (req, res) => {
     console.log("Error in get suggested users controller:", error);
   }
 };
+
+export const GetProfile = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    let user = await User.findById(userId)
+    if (!user) {
+      return res
+        .status(404)
+        .json({ message: "User not found", success: false });
+    }
+    const userPosts = await Promise.all(user.posts.map(async (p) => {
+      const post = await Post.findById(p)
+      if (post) {
+        return post
+      }
+      return null
+    }))
+    user = {
+      _id: user._id,
+      username: user.username,
+      profilePicture: user.profilePicture,
+      bio: user.bio,
+      gender: user.gender,
+      followers: user.followers,
+      following: user.following,
+      posts: userPosts
+    }
+    return res.status(200).json({success: true, user})
+  } catch (error) {
+    console.log("Error in get profile controller:", error)
+  }
+}
