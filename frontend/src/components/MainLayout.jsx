@@ -1,10 +1,17 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Sidebar from "./Sidebar"
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
+import { useSelector } from 'react-redux'
 
 const MainLayout = () => {
+  const navigate = useNavigate()
+  const authUser = useSelector(store => store.user?.authUser)
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
-
+  useEffect(() => {
+    if (!authUser) {
+      navigate("/login")
+    }
+  }, [])
   return (
     <div className="flex h-screen w-full bg-gradient-to-br from-[#0a0a12] via-[#140e1a] to-[#1a1225] overflow-hidden relative">
       {/* Animated gradient orbs */}

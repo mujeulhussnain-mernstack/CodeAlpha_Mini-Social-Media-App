@@ -7,6 +7,7 @@ import {
   Login,
   Logout,
   Register,
+  SearchedUser,
 } from "../controllers/user.controller.js";
 import isAuthenticated from "../middlewares/isAuthenticated.js";
 import upload from "../middlewares/multer.js";
@@ -21,5 +22,6 @@ router
 .route("/editprofile")
 .post(isAuthenticated, upload.single("profilePicture"), EditProfile);
 router.route("/getprofile/:id").get(isAuthenticated, GetProfile);
+router.route("/searcheduser").post(isAuthenticated, SearchedUser);
 
 export default router;

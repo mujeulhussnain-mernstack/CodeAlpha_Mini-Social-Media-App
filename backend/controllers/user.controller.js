@@ -244,3 +244,60 @@ export const GetProfile = async (req, res) => {
     console.log("Error in get profile controller:", error)
   }
 }
+
+export const SearchedUser = async (req, res) => {
+  try {
+    const { searchedUser } = req.body;
+    const currentUserId = req.id; // Get current user ID from auth middleware
+    console.log(searchedUser)
+    // Check if search term is provided
+    if (!searchedUser) {
+      return res.status(400).json({ 
+        success: false, 
+        message: "Search term is required" 
+      });
+    }
+
+    // Find users by username (partial match, case insensitive)
+    // Exclude the current user from search results
+    const users = await User.find({ 
+      username: { $regex: searchedUser, $options: 'i' },
+      _id: { $ne: currentUserId } // Exclude current user
+    })
+    .select("-password")
+    .limit(10); // Limit results to 10 users
+
+    // Check if any users found
+    if (users.length === 0) {
+      return res.status(200).json({ 
+        success: true, 
+        message: "No users found",
+        data: [] 
+      });
+    }
+
+    // Get the current user to check following status
+    const currentUser = await User.findById(currentUserId);
+
+    // Add isFollowing flag to each user
+    const usersWithFollowStatus = users.map(user => {
+      const userObj = user.toObject();
+      userObj.isFollowing = currentUser.following.includes(user._id);
+      return userObj;
+    });
+
+    // Return users data with following status
+    return res.status(200).json({ 
+      success: true, 
+      message: "Users found successfully",
+      data: usersWithFollowStatus 
+    });
+
+  } catch (error) {
+    console.log("Error in searched user controller:", error);
+    return res.status(500).json({ 
+      success: false, 
+      message: "Internal server error" 
+    });
+  }
+};

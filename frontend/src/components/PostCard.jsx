@@ -140,7 +140,7 @@ const PostCard = ({ post }) => {
           <div className="flex items-center gap-3 mb-2">
             <button
               onClick={handleLike}
-              className="flex items-center gap-1 text-gray-400 hover:text-red-500 transition-colors duration-300"
+              className="flex items-center gap-1 text-gray-400 hover:text-red-500 transition-colors duration-300 cursor-pointer"
             >
               {liked ? (
                 <HeartIconSolid className="w-5 h-5 text-red-500" />
@@ -152,10 +152,10 @@ const PostCard = ({ post }) => {
 
             <button
               onClick={() => setShowComments(true)}
-              className="flex items-center gap-1 text-gray-400 hover:text-purple-400 transition-colors duration-300"
+              className="flex items-center gap-1 text-gray-400 hover:text-purple-400 transition-colors duration-300 cursor-pointer"
             >
               <ChatBubbleLeftIcon className="w-5 h-5" />
-              <span className="text-xs">{comments?.length || 0}</span>
+              <span className="text-xs">See Comments</span>
             </button>
 
             <button className="flex items-center gap-1 text-gray-400 hover:text-purple-400 transition-colors duration-300 ml-auto">
@@ -175,16 +175,6 @@ const PostCard = ({ post }) => {
               <span className="break-words">{post?.caption || "No caption"}</span>
             </p>
           </div>
-
-          {/* View Comments Link */}
-          {(post?.commentCount > 0 || comments?.length > 0) && (
-            <button
-              onClick={() => setShowComments(true)}
-              className="text-gray-500 text-xs mt-1 hover:text-purple-400 transition-colors duration-300"
-            >
-              View all {post?.commentCount || comments?.length} comments
-            </button>
-          )}
         </div>
       </div>
 

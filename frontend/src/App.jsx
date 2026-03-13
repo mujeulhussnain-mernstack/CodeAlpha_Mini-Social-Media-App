@@ -1,33 +1,56 @@
-import "./App.css";
-import Register from "./pages/Register";
-import Login from "./pages/Login";
-import MainLayout from "./components/MainLayout";
-import Feed from "./pages/Feed";
-import Search from "./pages/Search";
-import SuggestedUsers from "./pages/SuggestedUsers";
-import CreatePost from "./pages/CreatePost";
-import EditProfile from "./pages/EditProfile";
-import GetProfile from "./pages/GetProfile";
-
-import NotFound from "./pages/NotFound";
+// App.jsx
+import React, { Suspense, lazy } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Loader from "./components/Loader";
+import { FeedSkeleton, ProfileSkeleton } from "./components/SkeletonLoader";
+import "./App.css";
+
+// Lazy load pages
+const Register = lazy(() => import("./pages/Register"));
+const Login = lazy(() => import("./pages/Login"));
+const MainLayout = lazy(() => import("./components/MainLayout"));
+const Feed = lazy(() => import("./pages/Feed"));
+const Search = lazy(() => import("./pages/Search"));
+const SuggestedUsers = lazy(() => import("./pages/SuggestedUsers"));
+const CreatePost = lazy(() => import("./pages/CreatePost"));
+const EditProfile = lazy(() => import("./pages/EditProfile"));
+const GetProfile = lazy(() => import("./pages/GetProfile"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+
+// Custom Suspense wrappers with different loaders for different pages
+const withSuspense = (Component, loader = "spinner", skeleton = null) => (props) => (
+  <Suspense fallback={skeleton || <Loader size="lg" variant={loader} fullScreen />}>
+    <Component {...props} />
+  </Suspense>
+);
+
 const router = createBrowserRouter([
-  { path: "/register", element: <Register /> },
-  { path: "/login", element: <Login /> },
+  { 
+    path: "/register", 
+    element: withSuspense(Register, "spinner")() 
+  },
+  { 
+    path: "/login", 
+    element: withSuspense(Login, "spinner")() 
+  },
   {
     path: "/",
-    element: <MainLayout />,
+    element: withSuspense(MainLayout, "pulse")(),
     children: [
-      { path: "/", element: <Feed /> },
-      { path: "/search", element: <Search /> },
-      { path: "/create", element: <CreatePost /> },
-      { path: "/suggestedusers", element: <SuggestedUsers /> },
-      { path: "/editprofile", element: <EditProfile /> },
-      { path: "/profile/:id", element: <GetProfile /> },
+      { path: "/", element: withSuspense(Feed, "dots", <FeedSkeleton />)() },
+      { path: "/search", element: withSuspense(Search, "pulse")() },
+      { path: "/create", element: withSuspense(CreatePost, "spinner")() },
+      { path: "/suggestedusers", element: withSuspense(SuggestedUsers, "dots")() },
+      { path: "/editprofile", element: withSuspense(EditProfile, "spinner")() },
+      { path: "/profile/:id", element: withSuspense(GetProfile, "progress", <ProfileSkeleton />)() },
     ],
   },
-  { path: "*", element: <NotFound /> },
+  { 
+    path: "*", 
+    element: withSuspense(NotFound, "pulse")() 
+  },
 ]);
+
 function App() {
   return (
     <>
