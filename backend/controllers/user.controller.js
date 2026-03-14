@@ -248,9 +248,7 @@ export const GetProfile = async (req, res) => {
 export const SearchedUser = async (req, res) => {
   try {
     const { searchedUser } = req.body;
-    const currentUserId = req.id; // Get current user ID from auth middleware
-    console.log(searchedUser)
-    // Check if search term is provided
+    const currentUserId = req.id; 
     if (!searchedUser) {
       return res.status(400).json({ 
         success: false, 
@@ -265,9 +263,7 @@ export const SearchedUser = async (req, res) => {
       _id: { $ne: currentUserId } // Exclude current user
     })
     .select("-password")
-    .limit(10); // Limit results to 10 users
-
-    // Check if any users found
+    .limit(10); 
     if (users.length === 0) {
       return res.status(200).json({ 
         success: true, 
@@ -276,7 +272,6 @@ export const SearchedUser = async (req, res) => {
       });
     }
 
-    // Get the current user to check following status
     const currentUser = await User.findById(currentUserId);
 
     // Add isFollowing flag to each user

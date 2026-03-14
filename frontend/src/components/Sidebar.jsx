@@ -4,7 +4,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { API_END_POINT } from "../constants";
 import { toast } from "react-toastify";
 import { useDispatch, useSelector } from "react-redux";
-import { setAuthUser } from "../store/user.slice";
+import { setAuthUser, setCommentsOfPost, setFeed, setGetProfile, setSuggestedUsers } from "../store/user.slice";
 
 const Sidebar = () => {
   const authUser = useSelector(store => store.user?.authUser)
@@ -23,6 +23,10 @@ const Sidebar = () => {
       if (response.data.success) {
         toast.success(response.data.message || "Try Again", { autoClose: 500 });
         dispatch(setAuthUser(null));
+        dispatch(setSuggestedUsers([]));
+        dispatch(setFeed([]));
+        dispatch(setCommentsOfPost([]));
+        dispatch(setGetProfile([]));
         navigate("/login");
       }
     } catch (error) {
