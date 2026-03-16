@@ -1,1 +1,1 @@
-export const API_END_POINT = "http://localhost:4040/api/v1"
+export const API_END_POINT = "https://codealpha-mini-social-media-app.onrender.com/api/v1"
